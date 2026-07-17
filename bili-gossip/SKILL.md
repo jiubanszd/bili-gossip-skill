@@ -63,8 +63,8 @@ python scripts/render_report.py --input <web-only-report.json>
 
 ## 安装口令
 
-```powershell
-python "$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py" --repo jiubanszd/bili-gossip-skill --path bili-gossip
+```text
+请从 https://github.com/jiubanszd/bili-gossip-skill/tree/main/bili-gossip 安装 bili-gossip Skill。
 ```
 
-报告页面默认展示并复制这条安装口令；如需分发其他仓库版本，可通过`BILI_SKILL_INSTALL_COMMAND`临时覆盖。
+报告页面默认展示并复制这条可直接发送给Agent的安装指令；如需分发其他仓库版本，可通过`BILI_SKILL_INSTALL_COMMAND`临时覆盖。
