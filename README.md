@@ -10,12 +10,4 @@
 请从 https://github.com/jiubanszd/bili-gossip-skill/tree/main/bili-gossip 安装 bili-gossip Skill。
 ```
 
-## Codex 终端安装
-
-在 PowerShell 中运行：
-
-```powershell
-python "$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py" --repo jiubanszd/bili-gossip-skill --path bili-gossip
-```
-
 安装后，直接输入一个或多个明星姓名，并要求复盘、梳理关系或吃瓜即可使用。
