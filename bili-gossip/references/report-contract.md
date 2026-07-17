@@ -49,7 +49,7 @@
     }
   ],
   "lesson_videos": [],
-  "install_command": "请从 https://github.com/jiubanszd/bili-gossip-skill/tree/main/bili-gossip 安装 bili-gossip Skill。"
+  "install_command": "npx skills add https://github.com/jiubanszd/bili-gossip-skill/tree/main/bili-gossip -g -y"
 }
 ```
 
