@@ -63,8 +63,8 @@ python scripts/render_report.py --input <web-only-report.json>
 
 ## 安装口令
 
-```text
-请从 https://github.com/jiubanszd/bili-gossip-skill/tree/main/bili-gossip 安装 bili-gossip Skill。
+```shell
+npx skills add https://github.com/jiubanszd/bili-gossip-skill/tree/main/bili-gossip -g -y
 ```
 
-报告页面默认展示并复制这条可直接发送给Agent的安装指令；如需分发其他仓库版本，可通过`BILI_SKILL_INSTALL_COMMAND`临时覆盖。
+报告页面默认展示并复制这条跨Agent安装口令；如需分发其他仓库版本，可通过`BILI_SKILL_INSTALL_COMMAND`临时覆盖。
