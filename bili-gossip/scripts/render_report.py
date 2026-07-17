@@ -323,9 +323,8 @@ def render(report: dict[str, Any]) -> str:
 
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     default_install_command = (
-        'python "$HOME/.codex/skills/.system/skill-installer/scripts/'
-        'install-skill-from-github.py" --repo jiubanszd/bili-gossip-skill '
-        '--path bili-gossip'
+        "请从 https://github.com/jiubanszd/bili-gossip-skill/tree/main/"
+        "bili-gossip 安装 bili-gossip Skill。"
     )
     install_command = (
         report.get("install_command")

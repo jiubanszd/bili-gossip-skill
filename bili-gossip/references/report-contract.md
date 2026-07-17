@@ -49,7 +49,7 @@
     }
   ],
   "lesson_videos": [],
-  "install_command": "python \"$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py\" --repo jiubanszd/bili-gossip-skill --path bili-gossip"
+  "install_command": "请从 https://github.com/jiubanszd/bili-gossip-skill/tree/main/bili-gossip 安装 bili-gossip Skill。"
 }
 ```
 
