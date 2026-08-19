@@ -63,7 +63,7 @@ def normalize_report(report: dict[str, Any]) -> tuple[dict[str, Any], list[str]]
         raise ValueError("event.title is required")
     event["title"] = title
     event["category"] = compact_text(event.get("category"), 20) or "热点事件"
-    event["summary"] = compact_text(event.get("summary"), 50)
+    event["summary"] = compact_text(event.get("summary"), 200)
 
     generated_at = compact_text(event.get("generated_at"))
     try:
@@ -97,7 +97,7 @@ def normalize_report(report: dict[str, Any]) -> tuple[dict[str, Any], list[str]]
     timeline: list[dict[str, Any]] = []
     for index, item in enumerate(report.get("timeline") or [], start=1):
         node_date = iso_date(item.get("date"))
-        text = compact_text(item.get("text"), 120)
+        text = compact_text(item.get("text"), 300)
         sources: list[dict[str, Any]] = []
         seen_urls: set[str] = set()
         for raw_source in item.get("sources") or []:

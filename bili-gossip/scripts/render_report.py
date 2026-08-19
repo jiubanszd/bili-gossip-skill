@@ -72,7 +72,7 @@ def format_number(value: Any) -> str:
 
 
 def freshness(event_date: date | None, updated_date: date) -> tuple[str, str]:
-    if event_date and (updated_date - event_date).days <= 30:
+    if event_date and (updated_date - event_date).days <= 7:
         return "新瓜", "status-new"
     return "旧瓜", "status-old"
 
@@ -93,15 +93,7 @@ def normalize_percentages(opinions: dict[str, Any]) -> tuple[int, int, int]:
 
 
 def render_sources(sources: list[dict[str, Any]]) -> str:
-    items = []
-    for source in sources:
-        name = esc(source.get("name") or "查看来源")
-        url = esc(source.get("url"))
-        if url:
-            items.append(f'<a class="source" href="{url}" target="_blank" rel="noreferrer">{name} ↗</a>')
-        else:
-            items.append(f'<span class="source">{name}</span>')
-    return "".join(items)
+    return ""
 
 
 def section_heading(title: str) -> str:
@@ -131,13 +123,7 @@ def render_timeline(items: list[dict[str, Any]]) -> str:
         )
     if not rows:
         return ""
-    source_rich = sum(1 for item in valid[:6] if len(item.get("sources") or []) >= 2) >= 2
-    if source_rich:
-        variant = "source-heavy"
-    elif len(valid) <= 3:
-        variant = "compact"
-    else:
-        variant = "standard"
+    variant = "compact" if len(valid) <= 3 else "standard"
     return (
         f'<section class="section section--timeline timeline--{variant}">{section_heading("事情是这样的")}'
         f'<div class="timeline-shell"><div class="timeline">{"".join(rows)}</div></div></section>'
@@ -149,8 +135,12 @@ def render_opinions(report: dict[str, Any]) -> str:
     engagement = to_int(metrics.get("comment_count")) + to_int(metrics.get("danmaku_count"))
     opinions = report.get("opinions") or {}
     support, neutral, oppose = normalize_percentages(opinions)
-    if engagement < 100 or support + neutral + oppose == 0:
-        return ""
+    if support + neutral + oppose == 0:
+        return (
+            f'<section class="section section--opinions">{section_heading("观点阵营")}'
+            '<div class="report-note">这个话题刚热起来，阵营还没成型——你是第一批吃瓜人，你的态度将影响风向。</div>'
+            "</section>"
+        )
 
     if neutral >= 40:
         variant = "neutral"
@@ -180,7 +170,6 @@ def render_opinions(report: dict[str, Any]) -> str:
         f'<div class="stance-neutral" style="width:{neutral}%"></div>'
         f'<div class="stance-oppose" style="width:{oppose}%"></div></div>'
         f'<div class="argument-grid">{"".join(cards)}</div>'
-        f'<div class="data-note">数据来源：UP主立场60% + 高赞评论/弹幕情绪40%，样本互动量 {engagement}</div>'
         "</section>"
     )
 
@@ -189,7 +178,11 @@ def render_danmaku(report: dict[str, Any]) -> str:
     total = to_int((report.get("metrics") or {}).get("danmaku_count"))
     items = sorted(report.get("danmaku") or [], key=lambda item: to_int(item.get("likes")), reverse=True)[:5]
     if total < 50 or not items:
-        return ""
+        return (
+            f'<section class="section section--danmaku">{section_heading("弹幕神了")}'
+            '<div class="report-note">弹幕区还在预热，先Mark住，等弹幕炸了回来看——你的弹幕可能被收录。</div>'
+            "</section>"
+        )
     contents = [str(item.get("content") or "") for item in items]
     if len(items) == 3:
         variant = "rank"
@@ -253,7 +246,6 @@ def render_videos(report: dict[str, Any]) -> tuple[str, str]:
         if item.get("url") and item.get("title") and video_identity(item) not in evidence_ids
     ][:3]
 
-    evidence_html = ""
     if evidence:
         evidence_variant = {1: "single", 2: "double"}.get(len(evidence), "stacked")
         cards = "".join(render_video_card(item) for item in evidence)
@@ -261,8 +253,13 @@ def render_videos(report: dict[str, Any]) -> tuple[str, str]:
             f'<section class="section section--videos video--{evidence_variant}">{section_heading("互联网有记忆哦")}'
             f'<div class="video-list">{cards}</div></section>'
         )
+    else:
+        evidence_html = (
+            f'<section class="section section--videos">{section_heading("互联网有记忆哦")}'
+            '<div class="report-note">考古小队还在挖——如果这段历史你亲历过，评论区补充，你就是考古队长。</div>'
+            "</section>"
+        )
 
-    lesson_html = ""
     if len(lessons) >= 2:
         lesson_variant = "double" if len(lessons) == 2 else "stacked"
         cards = "".join(render_video_card(item, lesson=True) for item in lessons)
@@ -270,6 +267,12 @@ def render_videos(report: dict[str, Any]) -> tuple[str, str]:
             f'<section class="section section--videos lesson video--{lesson_variant}">{section_heading("来阿B补课")}'
             '<p class="data-note">顺着人物和事件继续扒，以下视频与证据模块不重复。</p>'
             f'<div class="video-list">{cards}</div></section>'
+        )
+    else:
+        lesson_html = (
+            f'<section class="section section--videos lesson">{section_heading("来阿B补课")}'
+            '<div class="report-note">关于这件事的更多面，正在路上。先看看其他相关瓜——说不定有惊喜。</div>'
+            "</section>"
         )
     return evidence_html, lesson_html
 
@@ -281,7 +284,7 @@ def render_header(report: dict[str, Any]) -> str:
     status, status_class = freshness(occurred, generated.date())
     heat = short_text(event.get("heat_label"), 16)
     heat_html = f'<span class="status-pill heat">{esc(heat)}</span>' if heat else ""
-    summary = short_text(event.get("summary"), 50)
+    summary = short_text(event.get("summary"), 200)
     summary_html = (
         '<div class="summary"><div class="summary-title">省流版</div>'
         f"<p>{esc(summary)}</p></div>"
