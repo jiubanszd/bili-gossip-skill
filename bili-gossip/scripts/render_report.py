@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render a V2 deep-gossip report from structured JSON."""
+"""Render a V3 deep-gossip report from structured JSON."""
 
 from __future__ import annotations
 
@@ -350,7 +350,7 @@ def render(report: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="生成深度吃瓜V2 HTML报告")
+    parser = argparse.ArgumentParser(description="生成深度吃瓜V3 HTML报告")
     parser.add_argument("--input", type=Path, required=True, help="UTF-8报告JSON路径")
     parser.add_argument("--output", type=Path, help="输出HTML路径")
     parser.add_argument("--open", action="store_true", help="生成后在默认浏览器打开")
@@ -358,7 +358,7 @@ def main() -> int:
 
     report = json.loads(args.input.read_text(encoding="utf-8-sig"))
 
-    output = args.output or Path(tempfile.gettempdir()) / f"bili-gossip-v2-{int(datetime.now().timestamp())}.html"
+    output = args.output or Path(tempfile.gettempdir()) / f"bili-gossip-v3-{int(datetime.now().timestamp())}.html"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(render(report), encoding="utf-8")
     if args.open:
